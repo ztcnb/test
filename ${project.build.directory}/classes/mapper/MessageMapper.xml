@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.mapper.MessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.ztc.entity.Message">
+            <id property="askerId" column="askerId" jdbcType="INTEGER"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="senderId" column="senderId" jdbcType="INTEGER"/>
+            <result property="senderName" column="senderName" jdbcType="VARCHAR"/>
+            <result property="receiverId" column="receiverId" jdbcType="INTEGER"/>
+            <result property="receiverName" column="receiverName" jdbcType="VARCHAR"/>
+            <result property="sendTime" column="sendTime" jdbcType="TIMESTAMP"/>
+            <result property="isRead" column="isRead" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        askerId,content,senderId,
+        senderName,receiverId,receiverName,
+        sendTime,isRead
+    </sql>
+    <select id="findall" resultType="message" parameterType="message">
+        select * from message
+<where>
+        <if test="beginTime !=null and beginTime !=''">
+            and sendTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and sendTime &lt;= #{endTime}
+        </if>
+
+        <if test="isRead !=null">
+            and isRead = #{isRead}
+        </if>
+    </where>
+        limit ${offset},${limit}
+    </select>
+
+    <select id="count"  resultType="int" >
+        select count(*) from message
+    <where>
+        <if test="beginTime !=null and beginTime !=''">
+            and sendTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and sendTime &lt;= #{endTime}
+        </if>
+
+        <if test="isRead !=null">
+            and isRead = #{isRead}
+        </if>
+    </where>
+    </select>
+
+    <select id="exportmessage" resultType="message_export" parameterType="message">
+        select * from message
+<where>
+        <if test="senderName !=null and senderName !=''">
+            and senderName like '%${senderName}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and sendTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and sendTime &lt;= #{endTime}
+        </if>
+
+        <if test="isRead !=null">
+            and isRead = #{isRead}
+        </if>
+
+        <if test="idStr !=null and idStr !=''" >
+            and askerId in (${idStr})
+        </if>
+</where>
+    </select>
+</mapper>

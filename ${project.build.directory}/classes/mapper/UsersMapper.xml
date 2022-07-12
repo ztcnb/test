@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.mapper.UsersMapper">
+
+    <select id="findAll" resultType="com.ztc.entity.Users" parameterType="users">
+        select * from users
+<where>
+        <if test="loginName !=null and loginName !=''">
+            and loginName like '%${loginName}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and lastLonginTime &lt;= #{endTime}
+        </if>
+
+        <if test="isLockout !=null and isLockout !=''">
+            and isLockout = #{isLockout}
+        </if>
+</where>
+        <if test="orderBy != null and orderBy != ''">
+            <if test=" orderBy=='createTime' ">
+                order by createTime
+            </if>
+            <if test="orderBy=='lastLonginTime'">
+                order by  lastLonginTime
+            </if>
+        </if>
+    limit ${offset},${limit}
+    </select>
+    <select id="countAll" resultType="int">
+        select count(*) from users
+<where>
+        <if test="loginName !=null and loginName !=''">
+            and loginName like '%${loginName}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and lastLonginTime &lt;= #{endTime}
+       </if>
+        <if test="isLockout !=null and isLockout !=''">
+            and isLockout = #{isLockout}
+        </if>
+</where>
+        <if test="orderBy != null and orderBy != ''">
+            <if test=" orderBy=='createTime' ">
+                order by createTime
+            </if>
+            <if test="orderBy=='lastLonginTime'">
+                order by  lastLonginTime
+            </if>
+        </if>
+
+    </select>
+
+    <!--    修改锁定-->
+    <update id="updateIsLockoutInt">
+        update users
+        set isLockout=#{isLockout}
+        where id = #{id}
+
+    </update>
+    <!--    重置密码-->
+    <update id="resetPassword">
+        update users
+        set password=#{password}
+        where id = #{id}
+    </update>
+
+    <select id="getPermission" resultType="modules">
+        SELECT
+            DISTINCT m.*
+        FROM
+            users u,
+            userroles ur,
+            roles r,
+            rolemodules rm,
+            modules m
+        WHERE
+            u.Id = ur.UsersId
+          AND ur.RoleId = r.Id
+          AND r.Id = rm.RoleId
+          AND rm.ModuleId = m.Id
+          AND u.LoginName = #{loginName}
+          AND u.`Password` = #{password}
+          AND u.IsLockout = 0
+    </select>
+
+
+</mapper>

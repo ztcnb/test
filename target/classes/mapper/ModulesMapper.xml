@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.mapper.ModulesMapper">
+
+    <resultMap id="BaseResultMap" type="com.ztc.entity.MenuInfo">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="title" column="name" jdbcType="VARCHAR"/>
+            <result property="parentId" column="parentId" jdbcType="INTEGER"/>
+            <result property="href" column="path" jdbcType="VARCHAR"/>
+            <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="ops" column="ops" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+
+    <select id="findAll" resultType="modules" parameterType="modules">
+        select * from modules
+    </select>
+
+    <select id="findOneLevel" resultType="modules" parameterType="modules">
+        select * from modules where id=0
+    </select>
+
+    <select id="findIsHvaeSon" resultType="int">
+        select count(*) from modules where id=#{id}
+    </select>
+
+    <select id="findIsHavemodules" resultType="int">
+        select count(*) from modules where id=#{id}
+    </select>
+
+
+    <select id="notinId" resultType="modules" parameterType="modules">
+        SELECT * FROM modules where id not in (#{id})
+    </select>
+    <select id="findmodulesId" resultType="int">
+        SELECT count(*) FROM  userroles u,roles r where r.Id=u.RoleId and u.RoleId=#{id}
+    </select>
+
+    <select id="initMenu" resultMap="BaseResultMap">
+        SELECT DISTINCT
+            m.*
+        FROM
+            users u,
+            userroles ur,
+            roles r,
+            rolemodules rm,
+            modules m
+        WHERE
+            u.Id = ur.UsersId
+          AND ur.RoleId = r.Id
+          AND r.Id = rm.RoleId
+          AND rm.ModuleId = m.Id
+          AND u.Id = #{usersId}
+          AND m.type=#{type}
+        ORDER BY m.Weight DESC
+    </select>
+
+</mapper>

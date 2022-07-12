@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.mapper.StudentsMapper">
+<!--    AND netpusherid=#{id}-->
+    <select id="findAll" resultType="students" parameterType="students">
+        select * from students where isValid =0
+
+            <if test="netpusherid !=null and netpusherid !=''">
+               and netpusherid = #{netpusherid}
+            </if>
+
+            <if test="name !=null and name !=''">
+                and name like '%${name}%'
+            </if>
+            <if test="beginTime !=null and beginTime !=''">
+                and createTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime !=null and endTime !=''">
+                and createTime &lt;= #{endTime}
+            </if>
+
+            <if test="stuStatus !=null and stuStatus !=''">
+                and stuStatus = #{stuStatus}
+            </if>
+
+        limit ${offset},${limit}
+    </select>
+
+    <select id="count" resultType="int" >
+        select count(*) from students where isValid =0
+
+           <if test="netpusherid !=null and netpusherid !=''">
+               and netpusherid = #{netpusherid}
+            </if>
+            <if test="name !=null and name !=''">
+                and name like '%${name}%'
+            </if>
+            <if test="beginTime !=null and beginTime !=''">
+                and createTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime !=null and endTime !=''">
+                and createTime &lt;= #{endTime}
+            </if>
+        <if test="stuStatus !=null and stuStatus !=''">
+            and stuStatus = #{stuStatus}
+        </if>
+
+
+    </select>
+
+
+    <select id="findall" resultType="students" parameterType="students">
+        select * from students where isValid =0
+
+        <if test="askerId ==null ">
+            and askerId is not null
+        </if>
+        <if test="askerId !=null ">
+            and askerId = #{askerId}
+        </if>
+
+        <if test="name !=null and name !=''">
+            and name like '%${name}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and createTime &lt;= #{endTime}
+        </if>
+
+        <if test="stuStatus !=null and stuStatus !=''">
+            and stuStatus = #{stuStatus}
+        </if>
+
+        limit ${offset},${limit}
+    </select>
+
+    <select id="countAll" resultType="int" >
+        select count(*) from students where isValid =0
+
+        <if test="askerId ==null ">
+            and askerId is not null
+        </if>
+        <if test="askerId !=null ">
+            and askerId = #{askerId}
+        </if>
+        <if test="name !=null and name !=''">
+            and name like '%${name}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and createTime &lt;= #{endTime}
+        </if>
+
+        <if test="stuStatus !=null and stuStatus !=''">
+            and stuStatus = #{stuStatus}
+        </if>
+
+    </select>
+
+
+    <select id="exportstudents" resultType="student_export" parameterType="students">
+        select * from students where isValid =0
+
+        <if test="name !=null and name !=''">
+            and name like '%${name}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and createTime &lt;= #{endTime}
+        </if>
+
+        <if test="stuStatus !=null and stuStatus !=''">
+            and stuStatus = #{stuStatus}
+        </if>
+
+        <if test="netpusherid !=null and netpusherid !=''">
+            and netpusherid = #{netpusherid}
+        </if>
+
+        <if test="idStr !=null and idStr !=''" >
+            and id in (${idStr})
+        </if>
+    </select>
+
+    <update id="upddelete">
+        UPDATE students set isValid=1 where id=#{id}
+    </update>
+
+    <select id="notinId" resultType="students" parameterType="students">
+        SELECT * FROM students where id not in (#{id})
+    </select>
+
+
+    <select id="getRolesByUserId" resultType="roles">
+
+        SELECT
+            r.*
+        FROM
+            users u,
+            userroles ur,
+            roles r
+        WHERE
+            u.Id=ur.UsersId
+          and ur.RoleId=r.Id
+          and u.Id=#{userId}
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.mapper.UserrolesMapper">
+
+    <select id="findUsersId" resultType="int">
+        select count(*) from userroles u,roles r where #{id}=u.roleId;
+    </select>
+    <select id="findById" resultType="com.ztc.entity.Userroles">
+        select r.* from userroles u,roles r where u.RoleId=r.Id and u.UsersId=#{id}
+    </select>
+</mapper>

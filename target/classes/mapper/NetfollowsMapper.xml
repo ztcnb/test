@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ztc.mapper.NetfollowsMapper">
+
+
+    <select id="findAll" resultType="com.ztc.entity.Netfollows">
+        SELECT * from netfollows
+<where>
+
+    <if test="userId ==null ">
+        and userId is not null
+    </if>
+    <if test="userId !=null ">
+        and userId = #{userId}
+    </if>
+
+        <if test="studnetName !=null and studnetName !=''">
+            and studnetName like '%${studnetName}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and createTime &lt;= #{endTime}
+        </if>
+
+        <if test="folloState !=null and folloState !=''">
+            and folloState = #{folloState}
+        </if>
+</where>
+        limit ${offset},${limit}
+    </select>
+
+
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*) from netfollows
+<where>
+    <if test="userId ==null ">
+        and userId is not null
+    </if>
+    <if test="userId !=null ">
+        and userId = #{userId}
+    </if>
+        <if test="studnetName !=null and studnetName !=''">
+            and studnetName like '%${studnetName}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and createTime &lt;= #{endTime}
+        </if>
+
+    <if test="folloState !=null and folloState !=''">
+            and folloState = #{folloState}
+        </if>
+</where>
+
+    </select>
+
+
+    <select id="findAlljl" resultType="com.ztc.entity.Netfollows">
+        SELECT * from netfollows
+        <where>
+
+
+            <if test="askerId ==null ">
+                and askerId is not null
+            </if>
+            <if test="askerId !=null ">
+                and askerId = #{askerId}
+            </if>
+            <if test="studnetName !=null and studnetName !=''">
+                and studnetName like '%${studnetName}%'
+            </if>
+            <if test="beginTime !=null and beginTime !=''">
+                and createTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime !=null and endTime !=''">
+                and createTime &lt;= #{endTime}
+            </if>
+
+            <if test="folloState !=null">
+                and folloState = #{folloState}
+            </if>
+        </where>
+        limit ${offset},${limit}
+    </select>
+
+
+    <select id="countjl" resultType="java.lang.Integer">
+        SELECT count(*) from netfollows
+        <where>
+
+            <if test="askerId ==null ">
+                and askerId is not null
+            </if>
+            <if test="askerId !=null ">
+                and askerId = #{askerId}
+            </if>
+
+            <if test="studnetName !=null and studnetName !=''">
+                and studnetName like '%${studnetName}%'
+            </if>
+            <if test="beginTime !=null and beginTime !=''">
+                and createTime &gt;= #{beginTime}
+            </if>
+            <if test="endTime !=null and endTime !=''">
+                and createTime &lt;= #{endTime}
+            </if>
+
+            <if test="folloState !=null">
+                and folloState = #{folloState}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="expornetfollows" resultType="netfollows_export" parameterType="netfollows">
+        SELECT count(*) from netfollows where 1=1
+
+        <if test="studnetName !=null and studnetName !=''">
+            and studnetName like '%${studnetName}%'
+        </if>
+        <if test="beginTime !=null and beginTime !=''">
+            and createTime &gt;= #{beginTime}
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            and createTime &lt;= #{endTime}
+        </if>
+
+        <if test="folloState !=null and folloState !=''">
+            and folloState = #{folloState}
+        </if>
+        <if test="idStr !=null and idStr !=''" >
+            and id in (${idStr})
+        </if>
+    </select>
+    <select id="notinId" resultType="netfollows" parameterType="netfollows">
+        SELECT * FROM netfollows where studentId not in (#{studentId})
+    </select>
+
+</mapper>
